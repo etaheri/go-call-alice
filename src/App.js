@@ -1,33 +1,41 @@
 import React, { Component } from "react";
-import "./App.css";
+import {
+  Alignment,
+  Button,
+  Classes,
+  H5,
+  Navbar,
+  NavbarDivider,
+  NavbarGroup,
+  NavbarHeading,
+  Switch
+} from "@blueprintjs/core";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+
+// STYLES
+import "./App.css";
 
 // Components
 import Home from "./Home.js";
-import Map from "./Map.js";
+import Venue from "./Venue.js";
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <Router>
-            <div>
-              <ul>
-                <li>
-                  <Link to="/">Home</Link>
-                  <Link to="/map">Map</Link>
-                </li>
-              </ul>
-              <hr />
-              <Route exact path="/" component={Home} />
-              <Route path="/map" component={Map} />
-            </div>
-          </Router>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <Navbar>
+          <NavbarGroup align={Alignment.LEFT}>
+            <NavbarHeading>Ask Alice</NavbarHeading>
+            <NavbarDivider />
+            <Button className={Classes.MINIMAL} icon="home" text="Home" />
+          </NavbarGroup>
+        </Navbar>
+        <Router>
+          <div className="page-container">
+            <Route exact path="/" component={Home} />
+            <Route path="/venue/:venue-name" component={Venue} />
+          </div>
+        </Router>
       </div>
     );
   }
