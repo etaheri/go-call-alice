@@ -10,8 +10,8 @@
 .dashboard .venue-list {
   height: 100%;
   width: 400px;
-  box-shadow: 0 0 0 1px rgba(16, 22, 26, 0.1), 0 0 0 rgba(16, 22, 26, 0),
-    -1px 0px 1px rgba(16, 22, 26, 0.2);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+  z-index: 1;
 }
 .dashboard .venue-list ul {
   list-style-type: none;
@@ -28,12 +28,16 @@
 .dashboard .venue-list .venue-content {
   display: flex;
   /* margin-bottom: 16px; */
-  padding: 18px;
+  padding: 24px;
 }
 
-.dashboard .venue-list .venue-item:nth-of-type(even) {
+.dashboard .venue-list {
+  background-color: #ffffff;
+}
+/* .dashboard .venue-list .venue-item:nth-of-type(even) {
   background-color: #fafafa;
 }
+*/
 
 .dashboard .venue-list .venue-content:hover {
   background-color: #e6f7ff;
@@ -43,6 +47,7 @@
   text-align: left;
   flex: 1;
   margin: 0;
+  font-weight: 300;
 }
 
 .dashboard .venue-list .issue-count {
@@ -50,4 +55,5 @@
   flex: 1;
   margin: 0;
   background-color: none !important;
+  font-weight: 300;
 }
