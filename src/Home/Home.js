@@ -7,16 +7,16 @@ import "./Home.css";
 
 class HomePage extends Component {
   render() {
-    const { locations } = this.props.data;
-    if (!locations) return null;
+    const { venues } = this.props.data;
+    if (!venues) return null;
     return (
       <div className="dashboard">
         <div className="map-container">
-          <Map locations={locations} />
+          <Map locations={venues} />
         </div>
         <div className="venue-list">
           <ul>
-            {locations.map(location => (
+            {venues.map(location => (
               <li className="venue-item">
                 <Link className="venue-content" to={`venue/${location.slug}`}>
                   <h5 className="bp3-heading venue-name">{location.name}</h5>

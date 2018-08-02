@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { Dialog } from "@blueprintjs/core";
+import { Timeline, TimelineEvent } from "react-event-timeline";
+
+import { Dialog, Icon, ButtonGroup, Button } from "@blueprintjs/core";
 
 import Map from "./../Map/Map.js";
 // STYLES
@@ -24,8 +25,11 @@ class VenuePage extends Component {
   };
 
   render() {
-    const location = this.props.data.locations[0];
-    const { issues } = this.props.data.locations[0];
+    const { match } = this.props;
+    const venue = this.props.data.venues.find(function(location) {
+      return location.slug === match.params.venue;
+    });
+    const { issues } = venue ? venue : null;
     const { issue } = this.state;
     if (!issues) return null;
     return (
@@ -37,17 +41,45 @@ class VenuePage extends Component {
         >
           {issue ? (
             <div className="dialog-body">
-              <h3 class="bp3-heading">{issue.title}</h3>
-              <p>{issue.date}</p>
+              <ButtonGroup style={{ minWidth: 200, marginBottom: "20px" }}>
+                <Button icon="small-tick">Complete</Button>
+                <Button icon="disable">Close</Button>
+              </ButtonGroup>
+              <h3 className="bp3-heading">{issue.summary}</h3>
+              <p className="bp3-heading">
+                <em>Status:</em> {issue.status}
+              </p>
+              <p>Created: {issue.date}</p>
               <p>{issue.description}</p>
+              <Timeline>
+                <TimelineEvent
+                  title="Issue was created"
+                  createdAt="2018-08-01 7:06 PM"
+                  icon={<Icon name="redo" />}
+                />
+                <TimelineEvent
+                  title="Jon Doe begin progress"
+                  createdAt="2018-08-01 7:15 PM"
+                  icon={<Icon name="redo" />}
+                />
+                <TimelineEvent
+                  title="Jon Doe added a comment"
+                  createdAt="2018-08-01 7:18 PM"
+                  icon={<Icon name="redo" />}
+                />
+              </Timeline>,
             </div>
           ) : null}
         </Dialog>
         <div className="map-container">
           <Map
-            latitude={location.latitude}
-            longitude={location.longitude}
-            locations={issues}
+            latitude={venue.latitude}
+            longitude={venue.longitude}
+            locations={issues.map(issue => ({
+              name: issue.summary,
+              latitude: venue.locations[issue.location].latitude,
+              longitude: venue.locations[issue.location].longitude
+            }))}
             zoom={17}
           />
         </div>
@@ -59,7 +91,8 @@ class VenuePage extends Component {
                   className="issue-content"
                   onClick={() => this.openIssueDialog(issue)}
                 >
-                  <h5 className="bp3-heading issue-name">{issue.title}</h5>
+                  <Icon className="issue-icon" icon="error" />
+                  <h5 className="bp3-heading issue-name">{issue.summary}</h5>
                 </a>
               </li>
             ))}

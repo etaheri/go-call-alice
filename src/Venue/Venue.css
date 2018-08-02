@@ -61,3 +61,8 @@
 .dialog-body {
   margin: 20px;
 }
+
+.venue .issue-icon {
+  margin-right: 19px;
+  height: 19px;
+}

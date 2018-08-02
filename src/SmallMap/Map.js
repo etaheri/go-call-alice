@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import ReactMapGL, { NavigationControl, Marker, Popup } from "react-map-gl";
+import ReactMapGL, { NavigationControl, Marker } from "react-map-gl";
 import { Link } from "react-router-dom";
 import MapPin from "./map-pin";
 
@@ -31,6 +31,12 @@ class Map extends Component {
     this.resizeMap(this.state.viewport);
   }
 
+  componentDidUpdate(prevProps) {
+    if (prevProps.latitude !== this.state.viewport.longitude) {
+      this.resizeMap(this.state.viewport);
+    }
+  }
+
   componentWillUnmount() {
     window.removeEventListener("resize", () =>
       this.resizeMap(this.state.viewport)
@@ -43,50 +49,18 @@ class Map extends Component {
         ...viewport,
         width: this.mapElement.current
           ? this.mapElement.current.offsetWidth
-          : 500,
-        height: this.mapElement.current
-          ? this.mapElement.current.offsetHeight
           : 500
       }
     });
   };
 
-  renderLocationMarker = (item, index) => {
+  renderLocationMarker = (latitude, longitude) => {
     return (
-      <Marker
-        key={`marker-${index}`}
-        longitude={item.longitude}
-        latitude={item.latitude}
-      >
-        <MapPin
-          size={40}
-          onClick={() => this.setState({ popupInfo: item })}
-          color={item.issues && item.issues.length > 0 ? "red" : "#00c574"}
-        />
+      <Marker key={`marker`} longitude={latitude} latitude={longitude}>
+        <MapPin size={40} color={"red"} />
       </Marker>
     );
   };
-
-  /**
-   * Render the popup associated with the location
-   */
-  renderPopup() {
-    const { popupInfo } = this.state;
-    return (
-      popupInfo && (
-        <Popup
-          tipSize={5}
-          anchor="top"
-          longitude={popupInfo.longitude}
-          latitude={popupInfo.latitude}
-          onClose={() => this.setState({ popupInfo: null })}
-          key={`popup-${popupInfo.name}`}
-        >
-          <h6 className="bp3-heading">{popupInfo.name}</h6>
-        </Popup>
-      )
-    );
-  }
 
   render() {
     const { locations } = this.props;
@@ -98,8 +72,7 @@ class Map extends Component {
           mapboxApiAccessToken={process.env.REACT_APP_MapboxAccessToken}
           onViewportChange={this.resizeMap}
         >
-          {this.renderPopup()}
-          {locations ? locations.map(this.renderLocationMarker) : null}
+          {this.renderLocationMarker(0, 0)}
           <div className="nav">
             <NavigationControl onViewportChange={this.resizeMap} />
           </div>
